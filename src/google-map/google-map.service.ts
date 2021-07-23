@@ -13,6 +13,10 @@ export class GoogleMapService {
       if (!storeId) {
         throw new Error('Invalid get location request');
       }
+      /*
+        Sql query =>
+        SELECT * FROM `Store`
+      */
       const store = this.dbInstance.find((obj) => obj.id === storeId);
       return store;
     } catch (err) {
@@ -22,6 +26,7 @@ export class GoogleMapService {
       return `Unhandled error while fetching data ${err}`;
     }
   }
+
   // Add store data
   public async addStore(storeData: IStore): Promise<string> {
     try {
@@ -33,6 +38,12 @@ export class GoogleMapService {
       ) {
         throw new Error('Invalid Request for create store');
       }
+
+      /*
+        sql query ->
+        INSERT INTO `Store` ( 'name', 'lan', 'log' , 'businessType') 
+        VALUES (`${storeData.name}`, `${storeData.lan}`, `${storeData.log}`, `${storeData.businessType}`)
+      */
 
       const addObj = {
         id: uuidV4(),
@@ -57,6 +68,13 @@ export class GoogleMapService {
       if (!storeId || storeFields.id) {
         throw new Error('Invalid update location request');
       }
+
+      /*
+        sql query ->
+        UPDATE `Store`
+        SET 'name' = storeData.name, 'lan' = storeData.lan, 'log'  = storeData.log, 'businessType' = storeData.businessType
+        WHERE id = storeId
+      */
       this.dbInstance.find((obj) => {
         if (obj.id === storeId) {
           if (storeFields.businessType) {
@@ -89,6 +107,11 @@ export class GoogleMapService {
         throw new Error('Invalid get location request');
       }
 
+      /*
+        sql query ->
+        DELETE FROM `store`
+        WHERE id = storeID;
+      */
       this.dbInstance = this.dbInstance.filter((obj) => obj.id !== storeId);
       return `${storeId} store removed succesfully`;
     } catch (err) {
